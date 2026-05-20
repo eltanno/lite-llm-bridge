@@ -27,7 +27,12 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. `claude --model claude-sonnet` (or the Max-backed alias) returns a correct response and `/status` confirms the Max subscription is in use, not a per-token API key.
   4. `ANTHROPIC_BASE_URL=http://localhost:4000` is set once in Claude Code's environment; switching backends requires only `--model <alias>`, no other config change.
   5. A request to an Ollama-backed alias does not fail due to forwarded `anthropic-beta` headers or Anthropic-specific params (verified by the agentic spike completing successfully).
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [ ] 01-01-PLAN.md — Walking Skeleton: stand up the gateway (compose.yaml, config.yaml, .env scaffold, README) + E-02 Ollama-endpoint gate
+- [ ] 01-02-PLAN.md — Max OAuth path end-to-end: wire Claude Code, E-01 forwarding gate, Max login, /status confirms subscription (D-07 decision gate)
+- [ ] 01-03-PLAN.md — Ollama Cloud path + agentic spike: OLL-02 file-edit+bash session, model swap (E-03), HDR-01 verification
 
 **Decision gate (Phase 1):** If Max OAuth forwarding (`forward_client_headers_to_llm_api`) fails on `ghcr.io/berriai/litellm:main-stable`, fall back to Anthropic API key (per-token) and note the decision in PROJECT.md before proceeding. Do not build workarounds.
 
@@ -38,4 +43,4 @@ Phases execute in numeric order.
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Gateway + Feasibility Spike | 0/? | Not started | - |
+| 1. Gateway + Feasibility Spike | 0/3 | Not started | - |
