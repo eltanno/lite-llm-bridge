@@ -15,9 +15,9 @@ Requirements for the initial proof-of-concept. Each maps to a roadmap phase.
 
 ### Claude Code Integration
 
-- [ ] **CC-01**: Claude Code reaches the gateway with `ANTHROPIC_BASE_URL=http://localhost:4000` set once, authenticating to the gateway via `ANTHROPIC_CUSTOM_HEADERS="x-litellm-api-key: Bearer <LITELLM_MASTER_KEY>"`; both `ANTHROPIC_API_KEY` and `ANTHROPIC_AUTH_TOKEN` are kept absent (AUTH_TOKEN would collide with the Max OAuth bearer in the `Authorization` header — verified in research).
+- [x] **CC-01**: Claude Code reaches the gateway with `ANTHROPIC_BASE_URL=http://localhost:4000` set once, authenticating to the gateway via `ANTHROPIC_CUSTOM_HEADERS="x-litellm-api-key: Bearer <LITELLM_MASTER_KEY>"`; both `ANTHROPIC_API_KEY` and `ANTHROPIC_AUTH_TOKEN` are kept absent (AUTH_TOKEN would collide with the Max OAuth bearer in the `Authorization` header — verified in research).
 - [x] **CC-02**: The gateway serves the Anthropic Messages API (`/v1/messages`) and returns correctly-shaped Anthropic responses to Claude Code for every backend.
-- [ ] **CC-03**: A model is selectable per command via `claude --model <alias>`.
+- [x] **CC-03**: A model is selectable per command via `claude --model <alias>`.
 
 ### Aliasing & Routing
 
@@ -26,8 +26,8 @@ Requirements for the initial proof-of-concept. Each maps to a roadmap phase.
 
 ### Claude via Max Subscription
 
-- [ ] **MAX-01**: At least one alias routes to Claude using the Max subscription via OAuth-token forwarding (`forward_client_headers_to_llm_api`, scoped to Claude model groups) — no Anthropic API key and no per-token billing.
-- [ ] **MAX-02**: It is verified that Claude Code is consuming the Max subscription through the gateway (confirmed via `/status` and a successful real session).
+- [x] **MAX-01**: At least one alias routes to Claude using the Max subscription via OAuth-token forwarding (`forward_client_headers_to_llm_api`, scoped to Claude model groups) — no Anthropic API key and no per-token billing.
+- [x] **MAX-02**: It is verified that Claude Code is consuming the Max subscription through the gateway (confirmed via `/status` and a successful real session).
 
 ### Ollama Cloud Backend
 
@@ -80,13 +80,13 @@ Which phase covers which requirement.
 | GW-01 | Phase 1 | Complete |
 | GW-02 | Phase 1 | Complete |
 | GW-03 | Phase 1 | Complete |
-| CC-01 | Phase 1 | Pending |
+| CC-01 | Phase 1 | Complete |
 | CC-02 | Phase 1 | Complete |
-| CC-03 | Phase 1 | Pending |
+| CC-03 | Phase 1 | Complete |
 | AL-01 | Phase 1 | Complete |
 | AL-02 | Phase 1 | Complete |
-| MAX-01 | Phase 1 | Pending |
-| MAX-02 | Phase 1 | Pending |
+| MAX-01 | Phase 1 | Complete |
+| MAX-02 | Phase 1 | Complete |
 | OLL-01 | Phase 1 | Complete |
 | OLL-02 | Phase 1 | Pending |
 | HDR-01 | Phase 1 | Complete |

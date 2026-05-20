@@ -40,7 +40,7 @@ Plans:
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 01-02-PLAN.md — Max OAuth path end-to-end: wire Claude Code, E-01 forwarding gate, Max login, /status confirms subscription (D-07 decision gate)
+- [x] 01-02-PLAN.md — Max OAuth path end-to-end: wire Claude Code, E-01 forwarding gate, Max login, /status confirms subscription (D-07 decision gate)
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
@@ -55,4 +55,4 @@ Phases execute in numeric order.
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Gateway + Feasibility Spike | 1/3 | In Progress|  |
+| 1. Gateway + Feasibility Spike | 2/3 | In Progress|  |
