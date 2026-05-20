@@ -121,6 +121,8 @@ docker compose restart
 
 The **Max path is confirmed working**: `claude --model claude-sonnet` round-trips through the gateway to Anthropic on the **Claude Max subscription** — verified by `claude /status` showing the subscription (not an `sk-ant-` API key) and a correct live response. Header forwarding is scoped to the `claude-opus`/`claude-sonnet` groups via `model_group_settings.forward_client_headers_to_llm_api`, so the Ollama alias never receives the Anthropic bearer.
 
+The **Ollama agentic path is confirmed working**: a real `claude --model claude-haiku` session created a file (Write tool) and read it back via bash, end-to-end through the gateway to **Ollama Cloud** on **`deepseek-v4-pro`** — proving tool_use/tool_result fidelity survives LiteLLM's Anthropic↔OpenAI translation (OLL-02). `anthropic-beta` headers are not forwarded to Ollama (scoped forwarding + `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1`) and `drop_params: true` strips Anthropic-specific params, so the Ollama backend never sees them (HDR-01).
+
 ## Troubleshooting
 
 - **`429 Too Many Requests` from `api.anthropic.com`** — the Max subscription is being rate-limited (common when two Claude Code sessions hit Max at once). It also confirms forwarding is working; wait and retry.
