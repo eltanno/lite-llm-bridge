@@ -13,7 +13,7 @@ One phase delivers the entire v1 PoC: stand up the docker-compose gateway, wire 
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Gateway + Feasibility Spike** - Stand up the LiteLLM gateway and prove both backend paths end-to-end with real agentic tool use
+- [x] **Phase 1: Gateway + Feasibility Spike** - Stand up the LiteLLM gateway and prove both backend paths end-to-end with real agentic tool use (completed 2026-05-20)
 
 ## Phase Details
 
@@ -44,7 +44,7 @@ Plans:
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
-- [ ] 01-03-PLAN.md — Ollama Cloud path + agentic spike: OLL-02 file-edit+bash session, model swap (E-03), HDR-01 verification
+- [x] 01-03-PLAN.md — Ollama Cloud path + agentic spike: OLL-02 file-edit+bash session, model swap (E-03), HDR-01 verification
 
 **Decision gate (Phase 1):** If Max OAuth forwarding (`forward_client_headers_to_llm_api`) fails on `ghcr.io/berriai/litellm:main-stable`, fall back to Anthropic API key (per-token) and note the decision in PROJECT.md before proceeding. Do not build workarounds.
 
@@ -55,4 +55,4 @@ Phases execute in numeric order.
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Gateway + Feasibility Spike | 2/3 | In Progress|  |
+| 1. Gateway + Feasibility Spike | 3/3 | Complete   | 2026-05-20 |

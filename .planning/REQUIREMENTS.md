@@ -32,7 +32,7 @@ Requirements for the initial proof-of-concept. Each maps to a roadmap phase.
 ### Ollama Cloud Backend
 
 - [x] **OLL-01**: At least one alias routes to an Ollama Cloud model via the direct API (`openai/<model>` + `api_base: https://ollama.com/v1` + `OLLAMA_API_KEY`), with no local or containerized Ollama daemon.
-- [ ] **OLL-02**: Agentic fidelity is proven — a real Claude Code tool-use session (file edit + bash) completes end-to-end through an Ollama-backed alias (swap the model if the chosen one lacks tool-calling support).
+- [x] **OLL-02**: Agentic fidelity is proven — a real Claude Code tool-use session (file edit + bash) completes end-to-end through an Ollama-backed alias (swap the model if the chosen one lacks tool-calling support).
 
 ### Header & Parameter Handling
 
@@ -88,7 +88,7 @@ Which phase covers which requirement.
 | MAX-01 | Phase 1 | Complete |
 | MAX-02 | Phase 1 | Complete |
 | OLL-01 | Phase 1 | Complete |
-| OLL-02 | Phase 1 | Pending |
+| OLL-02 | Phase 1 | Complete |
 | HDR-01 | Phase 1 | Complete |
 
 **Coverage:**
