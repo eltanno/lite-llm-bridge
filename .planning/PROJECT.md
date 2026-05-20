@@ -14,20 +14,24 @@ Point Claude Code at one stable local endpoint and reach any chosen model throug
 
 <!-- Shipped and confirmed valuable. -->
 
-(None yet — ship to validate)
+Validated in Phase 1 (Gateway + Feasibility Spike), 2026-05-20:
+
+- [x] LiteLLM runs as a local Docker container at `localhost:4000`, started/stopped with `docker compose up/down` (GW-01/02)
+- [x] Claude Code connects via `ANTHROPIC_BASE_URL` set once, no per-use config changes (CC-01)
+- [x] Gateway exposes aliases `claude-opus`/`claude-sonnet`/`claude-haiku` (the `claude-` prefix is required to pass Claude Code's model-name filter), selectable via `claude --model <alias>` (AL-01, CC-03)
+- [x] Each alias's backend is defined in `config.yaml` and changeable by editing it + restart (AL-02)
+- [x] Claude Max reachable via OAuth-token forwarding — confirmed live end-to-end (`/status` shows the Max subscription; MAX-01/MAX-02)
+- [x] Ollama Cloud reachable + agentic tool-use proven through `claude-haiku` → `deepseek-v4-pro` (OLL-01/OLL-02)
+- [x] Secrets kept out of the image via gitignored `.env` + `os.environ/` references (GW-03)
+- [x] Anthropic beta headers/params do not leak to Ollama; setup documented in README (HDR-01, CC-02)
 
 ### Active
 
 <!-- Current scope. Hypotheses until shipped and validated. -->
 
-- [ ] LiteLLM runs as a local Docker container, reachable at `localhost:4000`
-- [ ] Claude Code connects to the gateway via `ANTHROPIC_BASE_URL` set once, with no per-use env changes
-- [ ] Gateway exposes semantic aliases `opus`/`sonnet`/`haiku`, selectable via `claude --model <alias>`
-- [ ] Each alias's backend is defined in LiteLLM config and changeable by editing that config
-- [ ] **Claude Max is reachable through the gateway via LiteLLM OAuth-token forwarding** (`forward_client_headers_to_llm_api: true`) — VERIFIED mechanism (LiteLLM "Using Claude Code Max Subscription" tutorial + Anthropic LLM-gateway doc). Residual validation: confirm it composes with alias-swapping (Claude-OAuth backends vs Ollama-key backends) on the pinned LiteLLM version
-- [ ] At least one Ollama Cloud model is reachable through the gateway
-- [ ] Secrets/credentials are kept out of the image (`.env`)
-- [ ] Setup is reproducible and documented, with every technical choice verified against official docs
+All v1 requirements were shipped and validated in Phase 1 — see **Validated** above. The next scope is defined at the v2 milestone (currently deferred): fallbacks/retries (REL-01), gateway model discovery (DISC-01), OpenAI + Gemini providers (PROV-01/02), and LiteLLM Admin UI / DB-backed hot-reload (OPS-01).
+
+Carried-forward consideration from Phase 1: optionally add canonical model ids (e.g. `claude-sonnet-4-6`) as extra `model_list` aliases so a bare `claude` (no `--model`) and Claude Code background requests route too (today only the three semantic aliases are mapped).
 
 ### Out of Scope
 
@@ -66,13 +70,13 @@ Point Claude Code at one stable local endpoint and reach any chosen model throug
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Use LiteLLM as the gateway | User-specified; translates Anthropic ↔ provider APIs, supports aliasing & fallbacks | — Pending |
-| Expose models as `opus`/`sonnet`/`haiku` semantic aliases | Stable names so Claude Code config never changes; backends swappable underneath | — Pending |
-| v1 providers = Claude Max + Ollama Cloud only | Prove the concept; defer GPT/Gemini | — Pending |
-| Model swap via per-command `claude --model <alias>` | Simpler than live remap; satisfies the on-the-fly need | — Pending |
-| Use Claude Max via LiteLLM OAuth-token forwarding (no API key) | Documented first-party path: Claude Code OAuth login → LiteLLM forwards the bearer token to Anthropic; reuses Max, no per-token billing | ✓ Verified viable — LiteLLM Max-subscription tutorial + Anthropic llm-gateway doc |
-| Ollama Cloud routing TBD (local daemon vs direct Cloud API) | Decide by official-docs verification; install local Ollama only if required | — Pending |
-| `docs/` reference treated as non-authoritative | User instruction; ChatGPT output is unverified | — Pending |
+| Use LiteLLM as the gateway | User-specified; translates Anthropic ↔ provider APIs, supports aliasing & fallbacks | ✓ Shipped (Phase 1) — `ghcr.io/berriai/litellm:main-stable` via docker-compose |
+| Expose models as semantic aliases | Stable names so Claude Code config never changes; backends swappable underneath | ✓ Shipped (Phase 1) as `claude-opus`/`claude-sonnet`/`claude-haiku` (the `claude-` prefix passes Claude Code's model-name filter) |
+| v1 providers = Claude Max + Ollama Cloud only | Prove the concept; defer GPT/Gemini | ✓ Both verified end-to-end (Phase 1) |
+| Model swap via per-command `claude --model <alias>` | Simpler than live remap; satisfies the on-the-fly need | ✓ Verified (Phase 1) — only `--model` changes; `ANTHROPIC_BASE_URL` set once |
+| Use Claude Max via LiteLLM OAuth-token forwarding (no API key) | Documented first-party path: Claude Code OAuth login → LiteLLM forwards the bearer token to Anthropic; reuses Max, no per-token billing | ✓ Verified end-to-end (Phase 1) — `/status` shows the Max subscription; scoped `model_group_settings` forwarding (E-01) |
+| Ollama Cloud via direct Cloud API (no local daemon) | Official OpenAI-compatible endpoint reachable directly | ✓ Resolved (Phase 1) — `openai/deepseek-v4-pro:cloud` + `api_base: https://ollama.com/v1` (E-02) |
+| `docs/` reference treated as non-authoritative | User instruction; ChatGPT output is unverified | ✓ Held — every choice verified against first-party docs |
 
 ## Evolution
 
@@ -92,4 +96,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-05-20 after initialization*
+*Last updated: 2026-05-20 — Phase 1 complete: v1 PoC validated end-to-end (gateway up; Max OAuth path and Ollama agentic path both proven live).*
