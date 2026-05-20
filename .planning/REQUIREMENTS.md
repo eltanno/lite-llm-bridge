@@ -73,29 +73,29 @@ Explicitly excluded for v1. Documented to prevent scope creep.
 
 ## Traceability
 
-Which phase covers which requirement. Populated during roadmap creation.
+Which phase covers which requirement.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| GW-01 | (set by roadmap) | Pending |
-| GW-02 | (set by roadmap) | Pending |
-| GW-03 | (set by roadmap) | Pending |
-| CC-01 | (set by roadmap) | Pending |
-| CC-02 | (set by roadmap) | Pending |
-| CC-03 | (set by roadmap) | Pending |
-| AL-01 | (set by roadmap) | Pending |
-| AL-02 | (set by roadmap) | Pending |
-| MAX-01 | (set by roadmap) | Pending |
-| MAX-02 | (set by roadmap) | Pending |
-| OLL-01 | (set by roadmap) | Pending |
-| OLL-02 | (set by roadmap) | Pending |
-| HDR-01 | (set by roadmap) | Pending |
+| GW-01 | Phase 1 | Pending |
+| GW-02 | Phase 1 | Pending |
+| GW-03 | Phase 1 | Pending |
+| CC-01 | Phase 1 | Pending |
+| CC-02 | Phase 1 | Pending |
+| CC-03 | Phase 1 | Pending |
+| AL-01 | Phase 1 | Pending |
+| AL-02 | Phase 1 | Pending |
+| MAX-01 | Phase 1 | Pending |
+| MAX-02 | Phase 1 | Pending |
+| OLL-01 | Phase 1 | Pending |
+| OLL-02 | Phase 1 | Pending |
+| HDR-01 | Phase 1 | Pending |
 
 **Coverage:**
 - v1 requirements: 13 total
-- Mapped to phases: 0 (filled during roadmap creation)
-- Unmapped: 13 (pending roadmap)
+- Mapped to phases: 13
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-05-20*
-*Last updated: 2026-05-20 after initial definition*
+*Last updated: 2026-05-20 after roadmap creation*
