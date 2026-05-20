@@ -84,6 +84,22 @@ unset ANTHROPIC_AUTH_TOKEN   # if set, rides in Authorization and collides with 
 - `ANTHROPIC_API_KEY` takes auth precedence over the Max OAuth login. If it is set anywhere in the environment, Claude Code calls Anthropic directly with that key (per-token billing) and bypasses the gateway entirely.
 - `ANTHROPIC_AUTH_TOKEN` is sent as `Authorization: Bearer …` — the same header the Max OAuth bearer occupies. Setting it replaces the OAuth bearer and breaks Max forwarding. That is why the gateway key travels in a separate header (`x-litellm-api-key`) via `ANTHROPIC_CUSTOM_HEADERS`.
 
+### Optional: make a plain `claude` route through the gateway
+
+`claude --model claude-opus|claude-sonnet|claude-haiku` already routes through the gateway. But a bare `claude` (or `/model opus|sonnet|haiku`) sends Claude Code's *canonical* model id (e.g. `claude-sonnet-4-6`), which isn't in `config.yaml` — so it returns `400 Invalid model name`.
+
+To make Claude Code's built-in `opus`/`sonnet`/`haiku` aliases (and its background tasks) resolve to the gateway aliases instead, also export:
+
+```bash
+export ANTHROPIC_DEFAULT_OPUS_MODEL=claude-opus
+export ANTHROPIC_DEFAULT_SONNET_MODEL=claude-sonnet
+export ANTHROPIC_DEFAULT_HAIKU_MODEL=claude-haiku   # also used for Claude Code background tasks
+```
+
+Now a bare `claude`, `/model sonnet`, and background calls all flow through the gateway with no `--model` needed, and `config.yaml` stays clean. (`ANTHROPIC_DEFAULT_*_MODEL` control what the `opus`/`sonnet`/`haiku` aliases resolve to, per Claude Code's model-config docs; `ANTHROPIC_SMALL_FAST_MODEL` is the deprecated name for the haiku one.)
+
+> On a **Max** plan a bare `claude` defaults to Opus (→ `claude-opus` → Max) and auto-falls back to Sonnet (also Max) when Opus is rate-limited. To deliberately use Ollama instead, pass `--model claude-haiku` or set `ANTHROPIC_MODEL=claude-haiku`.
+
 ## 4. Log in to Claude Max
 
 With `ANTHROPIC_API_KEY` unset, start Claude Code and log in through the browser with your Max account:
