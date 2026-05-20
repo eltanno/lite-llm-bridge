@@ -9,20 +9,20 @@ Requirements for the initial proof-of-concept. Each maps to a roadmap phase.
 
 ### Gateway & Deployment
 
-- [ ] **GW-01**: LiteLLM runs as a single docker-compose service reachable at `localhost:4000`, with the image pinned to `ghcr.io/berriai/litellm:main-stable` (explicitly never 1.82.7 / 1.82.8).
-- [ ] **GW-02**: `docker compose up` and `docker compose down` start and stop the gateway; `compose.yaml` and `config.yaml` are committed to the repo.
-- [ ] **GW-03**: Secrets exist only in a gitignored `.env` (`LITELLM_MASTER_KEY`, `OLLAMA_API_KEY`); no secrets are baked into the image or committed files.
+- [x] **GW-01**: LiteLLM runs as a single docker-compose service reachable at `localhost:4000`, with the image pinned to `ghcr.io/berriai/litellm:main-stable` (explicitly never 1.82.7 / 1.82.8).
+- [x] **GW-02**: `docker compose up` and `docker compose down` start and stop the gateway; `compose.yaml` and `config.yaml` are committed to the repo.
+- [x] **GW-03**: Secrets exist only in a gitignored `.env` (`LITELLM_MASTER_KEY`, `OLLAMA_API_KEY`); no secrets are baked into the image or committed files.
 
 ### Claude Code Integration
 
 - [ ] **CC-01**: Claude Code reaches the gateway with `ANTHROPIC_BASE_URL=http://localhost:4000` set once, authenticating to the gateway via `ANTHROPIC_CUSTOM_HEADERS="x-litellm-api-key: Bearer <LITELLM_MASTER_KEY>"`; both `ANTHROPIC_API_KEY` and `ANTHROPIC_AUTH_TOKEN` are kept absent (AUTH_TOKEN would collide with the Max OAuth bearer in the `Authorization` header — verified in research).
-- [ ] **CC-02**: The gateway serves the Anthropic Messages API (`/v1/messages`) and returns correctly-shaped Anthropic responses to Claude Code for every backend.
+- [x] **CC-02**: The gateway serves the Anthropic Messages API (`/v1/messages`) and returns correctly-shaped Anthropic responses to Claude Code for every backend.
 - [ ] **CC-03**: A model is selectable per command via `claude --model <alias>`.
 
 ### Aliasing & Routing
 
-- [ ] **AL-01**: The gateway exposes the semantic aliases `claude-opus`, `claude-sonnet`, and `claude-haiku` (names that pass Claude Code's model-name filter).
-- [ ] **AL-02**: Each alias's backend is defined in the committed `config.yaml` and is changed by editing that file (a container restart applies the change; no live-reload required in v1).
+- [x] **AL-01**: The gateway exposes the semantic aliases `claude-opus`, `claude-sonnet`, and `claude-haiku` (names that pass Claude Code's model-name filter).
+- [x] **AL-02**: Each alias's backend is defined in the committed `config.yaml` and is changed by editing that file (a container restart applies the change; no live-reload required in v1).
 
 ### Claude via Max Subscription
 
@@ -31,12 +31,12 @@ Requirements for the initial proof-of-concept. Each maps to a roadmap phase.
 
 ### Ollama Cloud Backend
 
-- [ ] **OLL-01**: At least one alias routes to an Ollama Cloud model via the direct API (`openai/<model>` + `api_base: https://ollama.com/v1` + `OLLAMA_API_KEY`), with no local or containerized Ollama daemon.
+- [x] **OLL-01**: At least one alias routes to an Ollama Cloud model via the direct API (`openai/<model>` + `api_base: https://ollama.com/v1` + `OLLAMA_API_KEY`), with no local or containerized Ollama daemon.
 - [ ] **OLL-02**: Agentic fidelity is proven — a real Claude Code tool-use session (file edit + bash) completes end-to-end through an Ollama-backed alias (swap the model if the chosen one lacks tool-calling support).
 
 ### Header & Parameter Handling
 
-- [ ] **HDR-01**: `anthropic-beta` / `anthropic-version` headers are forwarded to Claude backends but stripped for Ollama, and `drop_params: true` plus `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1` (Ollama group) are set so Anthropic-specific fields don't break Ollama requests.
+- [x] **HDR-01**: `anthropic-beta` / `anthropic-version` headers are forwarded to Claude backends but stripped for Ollama, and `drop_params: true` plus `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1` (Ollama group) are set so Anthropic-specific fields don't break Ollama requests.
 
 ## v2 Requirements
 
@@ -77,19 +77,19 @@ Which phase covers which requirement.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| GW-01 | Phase 1 | Pending |
-| GW-02 | Phase 1 | Pending |
-| GW-03 | Phase 1 | Pending |
+| GW-01 | Phase 1 | Complete |
+| GW-02 | Phase 1 | Complete |
+| GW-03 | Phase 1 | Complete |
 | CC-01 | Phase 1 | Pending |
-| CC-02 | Phase 1 | Pending |
+| CC-02 | Phase 1 | Complete |
 | CC-03 | Phase 1 | Pending |
-| AL-01 | Phase 1 | Pending |
-| AL-02 | Phase 1 | Pending |
+| AL-01 | Phase 1 | Complete |
+| AL-02 | Phase 1 | Complete |
 | MAX-01 | Phase 1 | Pending |
 | MAX-02 | Phase 1 | Pending |
-| OLL-01 | Phase 1 | Pending |
+| OLL-01 | Phase 1 | Complete |
 | OLL-02 | Phase 1 | Pending |
-| HDR-01 | Phase 1 | Pending |
+| HDR-01 | Phase 1 | Complete |
 
 **Coverage:**
 - v1 requirements: 13 total

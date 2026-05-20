@@ -36,7 +36,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 Plans:
 **Wave 1**
 
-- [ ] 01-01-PLAN.md — Walking Skeleton: stand up the gateway (compose.yaml, config.yaml, .env scaffold, README) + E-02 Ollama-endpoint gate
+- [x] 01-01-PLAN.md — Walking Skeleton: stand up the gateway (compose.yaml, config.yaml, .env scaffold, README) + E-02 Ollama-endpoint gate
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
@@ -55,4 +55,4 @@ Phases execute in numeric order.
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Gateway + Feasibility Spike | 0/3 | Not started | - |
+| 1. Gateway + Feasibility Spike | 1/3 | In Progress|  |
