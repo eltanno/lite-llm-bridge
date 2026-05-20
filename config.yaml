@@ -1,0 +1,44 @@
+# config.yaml
+# Committed to repo — contains NO secrets.
+# Secrets live in .env (gitignored) and are referenced as os.environ/VAR_NAME.
+
+model_list:
+
+  # claude-opus → Claude (Max subscription via OAuth forwarding)
+  - model_name: claude-opus
+    litellm_params:
+      model: anthropic/claude-opus-4-7
+      # No api_key here — the Max OAuth bearer is forwarded from Claude Code
+
+  # claude-sonnet → Claude (Max subscription via OAuth forwarding)
+  - model_name: claude-sonnet
+    litellm_params:
+      model: anthropic/claude-sonnet-4-6
+      # No api_key here — the Max OAuth bearer is forwarded from Claude Code
+
+  # claude-haiku → Ollama Cloud (OpenAI-compatible API, no local daemon)
+  # Model per D-02 (user choice 2026-05-20): deepseek-v4-pro. E-02 curl-validated.
+  # Fallback chain if tool-calling fidelity fails in the agentic spike (OLL-02): qwen3.5 -> glm-5.1
+  - model_name: claude-haiku
+    litellm_params:
+      model: openai/deepseek-v4-pro:cloud
+      api_base: https://ollama.com/v1        # /v1 MUST be included — LiteLLM does not auto-append it
+      api_key: os.environ/OLLAMA_API_KEY
+
+general_settings:
+  master_key: os.environ/LITELLM_MASTER_KEY
+  # forward_client_headers_to_llm_api is scoped to the Claude groups only (see model_group_settings).
+  # Safest approach: the Ollama group never receives the Anthropic OAuth bearer.
+
+model_group_settings:
+  forward_client_headers_to_llm_api:
+    - claude-opus
+    - claude-sonnet
+  # claude-haiku (Ollama) is intentionally absent — it authenticates with OLLAMA_API_KEY,
+  # not the forwarded Anthropic bearer (D-03).
+  # EMPIRICAL GATE E-01: if this list syntax is inactive on the pinned main-stable build,
+  # fall back to `general_settings: forward_client_headers_to_llm_api: true`
+  # (safe — no ANTHROPIC_API_KEY is in the container, so a bearer reaching Ollama is rejected harmlessly).
+
+litellm_settings:
+  drop_params: true   # Strips unknown/Anthropic-specific params before sending to Ollama (HDR-01, D-05)
