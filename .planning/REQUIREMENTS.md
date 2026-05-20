@@ -15,7 +15,7 @@ Requirements for the initial proof-of-concept. Each maps to a roadmap phase.
 
 ### Claude Code Integration
 
-- [ ] **CC-01**: Claude Code reaches the gateway with `ANTHROPIC_BASE_URL=http://localhost:4000` set once plus `ANTHROPIC_AUTH_TOKEN=<LITELLM_MASTER_KEY>`, and `ANTHROPIC_API_KEY` is kept absent from Claude Code's environment.
+- [ ] **CC-01**: Claude Code reaches the gateway with `ANTHROPIC_BASE_URL=http://localhost:4000` set once, authenticating to the gateway via `ANTHROPIC_CUSTOM_HEADERS="x-litellm-api-key: Bearer <LITELLM_MASTER_KEY>"`; both `ANTHROPIC_API_KEY` and `ANTHROPIC_AUTH_TOKEN` are kept absent (AUTH_TOKEN would collide with the Max OAuth bearer in the `Authorization` header — verified in research).
 - [ ] **CC-02**: The gateway serves the Anthropic Messages API (`/v1/messages`) and returns correctly-shaped Anthropic responses to Claude Code for every backend.
 - [ ] **CC-03**: A model is selectable per command via `claude --model <alias>`.
 
