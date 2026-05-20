@@ -24,7 +24,7 @@ Point Claude Code at one stable local endpoint and reach any chosen model throug
 - [ ] Claude Code connects to the gateway via `ANTHROPIC_BASE_URL` set once, with no per-use env changes
 - [ ] Gateway exposes semantic aliases `opus`/`sonnet`/`haiku`, selectable via `claude --model <alias>`
 - [ ] Each alias's backend is defined in LiteLLM config and changeable by editing that config
-- [ ] **Claude Max is reachable through the gateway without Anthropic API per-token billing** — PRIMARY HYPOTHESIS, feasibility to be validated in research
+- [ ] **Claude Max is reachable through the gateway via LiteLLM OAuth-token forwarding** (`forward_client_headers_to_llm_api: true`) — VERIFIED mechanism (LiteLLM "Using Claude Code Max Subscription" tutorial + Anthropic LLM-gateway doc). Residual validation: confirm it composes with alias-swapping (Claude-OAuth backends vs Ollama-key backends) on the pinned LiteLLM version
 - [ ] At least one Ollama Cloud model is reachable through the gateway
 - [ ] Secrets/credentials are kept out of the image (`.env`)
 - [ ] Setup is reproducible and documented, with every technical choice verified against official docs
@@ -47,7 +47,7 @@ Point Claude Code at one stable local endpoint and reach any chosen model throug
   - the Claude Code env var `CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY=1`
   - that "Ollama exposes Anthropic-compatible endpoints"
   - reaching Ollama Cloud via a local Ollama daemon using `ollama_chat/<model>:cloud` + `api_base: http://localhost:11434`
-  - that Claude Max can be routed through LiteLLM at all
+  - that Claude Max can be routed through LiteLLM at all — **VERIFIED viable** via OAuth-token forwarding (`forward_client_headers_to_llm_api: true`); see Key Decisions. Gotcha: do NOT set `ANTHROPIC_API_KEY` in Claude Code's env — it overrides the subscription. The LiteLLM 1.82.7/1.82.8 malware warning is confirmed in Anthropic's own llm-gateway doc — pin a known-good official image.
 - The user does **not** currently run a local Ollama daemon, but will install one **if** research confirms it is required to reach Ollama Cloud.
 - Subscriptions in play: **Claude Max (5x)**, **Ollama Cloud**.
 
@@ -55,7 +55,7 @@ Point Claude Code at one stable local endpoint and reach any chosen model throug
 
 - **Tech stack**: LiteLLM as the gateway, Docker / docker-compose — user asked for a "container".
 - **Verification (process)**: Every technical decision must be verified against official LiteLLM / Anthropic / Ollama documentation and working examples before adoption; `docs/` is not a source of truth.
-- **Cost**: Avoid Anthropic API per-token billing — intent is to reuse the existing Claude Max subscription. This is the primary feasibility risk.
+- **Cost**: Reuse the existing Claude Max subscription instead of per-token Anthropic API billing — achieved via LiteLLM OAuth-token forwarding (verified). Avoid setting `ANTHROPIC_API_KEY` in Claude Code's environment (it overrides the subscription).
 - **Deployment**: Local-only (`localhost`), single developer.
 - **Compatibility**: Must work with Claude Code's model selection (`claude --model <alias>`) and the Anthropic Messages API shape.
 - **Client-config stability**: Claude Code's `ANTHROPIC_BASE_URL` is set once and never changed to switch models.
@@ -70,7 +70,7 @@ Point Claude Code at one stable local endpoint and reach any chosen model throug
 | Expose models as `opus`/`sonnet`/`haiku` semantic aliases | Stable names so Claude Code config never changes; backends swappable underneath | — Pending |
 | v1 providers = Claude Max + Ollama Cloud only | Prove the concept; defer GPT/Gemini | — Pending |
 | Model swap via per-command `claude --model <alias>` | Simpler than live remap; satisfies the on-the-fly need | — Pending |
-| Attempt Claude Max via gateway **without** API billing | User wants to reuse Max and avoid API costs | ⚠️ Revisit — feasibility unverified (primary risk) |
+| Use Claude Max via LiteLLM OAuth-token forwarding (no API key) | Documented first-party path: Claude Code OAuth login → LiteLLM forwards the bearer token to Anthropic; reuses Max, no per-token billing | ✓ Verified viable — LiteLLM Max-subscription tutorial + Anthropic llm-gateway doc |
 | Ollama Cloud routing TBD (local daemon vs direct Cloud API) | Decide by official-docs verification; install local Ollama only if required | — Pending |
 | `docs/` reference treated as non-authoritative | User instruction; ChatGPT output is unverified | — Pending |
 
