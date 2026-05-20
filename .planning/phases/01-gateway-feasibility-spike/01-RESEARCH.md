@@ -4,6 +4,8 @@
 **Domain:** LiteLLM proxy, Docker Compose, Claude Max OAuth forwarding, Ollama Cloud direct API
 **Confidence:** HIGH (core configs and env vars verified against first-party docs; one empirical gap remains for Ollama Cloud `api_base` exact form with LiteLLM)
 
+> **⚠ MODEL UPDATE (2026-05-20, user decision):** The Ollama-backed `claude-haiku` model is now **`deepseek-v4-pro`** (current newest DeepSeek on Ollama Cloud; `tools` capability listed in the live cloud catalog at ollama.com/search?c=cloud). Fallback chain is now **`qwen3.5`** → **`glm-5.1`**. This **SUPERSEDES every `qwen3-coder-next` and `qwen3-coder:480b-cloud` reference below** — treat those as historical research notes, not the chosen model. The authoritative config lives in `01-01-PLAN.md` / `01-03-PLAN.md`, which grep-gate `openai/deepseek-v4-pro:cloud`. The architecture specs/`[VERIFIED]` URLs cited below for `qwen3-coder-next` do NOT transfer to deepseek-v4-pro; its exact cloud tag suffix and tool-call fidelity through LiteLLM are confirmed by the **E-02** (curl) and **E-03** (agentic spike) gates.
+
 ---
 
 <user_constraints>
