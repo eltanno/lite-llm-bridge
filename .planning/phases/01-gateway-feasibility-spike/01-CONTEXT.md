@@ -39,7 +39,7 @@ These were settled in the project discussion (see PROJECT.md / SUMMARY.md) or au
 - **D-07:** Validation is agentic, not a curl round-trip: drive a real Claude Code tool-use session (file edit + bash) through the Ollama-backed alias (OLL-02), and confirm `/status` shows the Max subscription in use for a Claude-backed alias (MAX-02). Decision gate: if Max OAuth forwarding is broken on `main-stable`, fall back to an Anthropic API key and record it in PROJECT.md before proceeding — no workarounds.
 
 ### Session isolation (test safety)
-- **D-08:** All live `claude` test invocations (steps 2 & 3) run with `CLAUDE_CONFIG_DIR=./.claude-test` — a project-local, gitignored config+credentials dir — with the Max login performed into THAT dir, never `~/.claude`. The executor never invokes `claude` (no nested Claude Code), never writes `~/.claude/`, never runs `/login`/`/logout`; autonomous gateway checks use raw `curl`. Per-shell `export` only; global `~/.claude/settings.json` wiring is a manual user step after the spike proves out. Protects the running parent Claude Code session from being redirected or logged out (user concern, 2026-05-20).
+- **D-08:** Tests use the EXISTING global Max login — no separate config dir or login. Safety = gateway env vars set PER-COMMAND only (never written to global `~/.claude/settings.json`), the executor never runs `claude` (no nested Claude Code) and never touches `~/.claude/` (live `claude` runs are human checkpoints; autonomous gateway checks use raw `curl`), and never `claude /logout`. Protects the running parent session (user concern, 2026-05-20).
 </decisions>
 
 <canonical_refs>
