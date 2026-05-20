@@ -117,6 +117,15 @@ Edit the alias's `litellm_params.model` (and `api_base`/`api_key` if needed) in 
 docker compose restart
 ```
 
+## Verified (Phase 1)
+
+The **Max path is confirmed working**: `claude --model claude-sonnet` round-trips through the gateway to Anthropic on the **Claude Max subscription** — verified by `claude /status` showing the subscription (not an `sk-ant-` API key) and a correct live response. Header forwarding is scoped to the `claude-opus`/`claude-sonnet` groups via `model_group_settings.forward_client_headers_to_llm_api`, so the Ollama alias never receives the Anthropic bearer.
+
+## Troubleshooting
+
+- **`429 Too Many Requests` from `api.anthropic.com`** — the Max subscription is being rate-limited (common when two Claude Code sessions hit Max at once). It also confirms forwarding is working; wait and retry.
+- **`400 Invalid model name passed in model=claude-...`** — the request used a *canonical* model id instead of an alias. Only `claude-opus`/`claude-sonnet`/`claude-haiku` are in `config.yaml`'s `model_list`, so a bare `claude` (no `--model`) or some background calls that send the resolved id are rejected. Always pass `claude --model <alias>`, or add the canonical ids as extra `model_list` entries if you want bare/background requests to route too.
+
 ---
 
 *Single-developer, localhost-only proof of concept. The gateway binds `4000:4000`; do not expose it beyond loopback.*
