@@ -158,7 +158,7 @@ For **"replace Claude Code, one tool including GSD, with model freedom, reusing 
 - [ ] Spike the front-runner (OpenCode) end-to-end; if ethos wins, spike Pi with `pi-subagents` + `pi-mcp-adapter`.
 - [ ] Scope the hooks rewrite (AutoMem recall/store + context-mode routing) for the chosen tool.
 - [ ] Decide the LiteLLM gateway's fate (drop, or keep as alias/auth point).
-- [ ] **Pending:** tear down the `chatgpt-test` gateway spike (revert `config.yaml`/`compose.yaml`/`.gitignore` + remove `.chatgpt-auth/`). Still live.
+- [ ] **Keep — do NOT tear down.** Repurpose the `chatgpt-test` gateway config as the **OpenCode→gateway→ChatGPT** test. PROV-01's failure was Claude-Code-specific (its block-array system prompt crashed LiteLLM's `map_system_message_pt`); OpenCode hits the OpenAI-compatible endpoint with a *string* system message, which the spike confirmed works — so the crash shouldn't recur. Verify end-to-end in the spike, including whether the ChatGPT/Codex no-system-role *folding* (happens via the gateway regardless of client) hurts agentic quality. Fallback if it does: OpenCode→ChatGPT **direct** (native OAuth, no gateway).
 
 ---
 
