@@ -83,7 +83,7 @@ A local, Dockerized **LiteLLM gateway** that lets Claude Code drive multiple mod
 |-------------|-------------|---------|
 | `ghcr.io/berriai/litellm:main-stable` | `litellm/litellm:latest` on Docker Hub | `main-stable` tag is more explicit about stability; both work |
 | `openai/` prefix for Ollama Cloud | `ollama_chat/` prefix | `ollama_chat/` requires local daemon; `openai/` hits cloud REST API directly |
-| Anthropic API key | Claude Max OAuth token | OAuth in third-party tools banned by Anthropic since April 2026 |
+| Claude Max OAuth token (forwarded by LiteLLM) | Anthropic API key (pay-per-token) | Max reuses the existing subscription at no per-token cost — verified working; the API key bills per token and is only needed without a Max subscription |
 | No database (plain image) | `litellm-database` image + Postgres | Single-user PoC has no need for spend tracking or multi-user audit logs |
 ## What NOT to Use
 | Avoid | Why | Use Instead |
@@ -92,7 +92,6 @@ A local, Dockerized **LiteLLM gateway** that lets Claude Code drive multiple mod
 | `ANTHROPIC_API_KEY` in Claude Code shell env | Bypasses the gateway, calls Anthropic directly | `ANTHROPIC_AUTH_TOKEN` set to LiteLLM master key |
 | `ollama_chat/<model>:cloud` + `api_base: http://localhost:11434` | Requires local Ollama daemon (reference doc pattern) | `openai/<model>` + `api_base: https://ollama.com` for daemon-free cloud access |
 | Hard-coded credentials in config.yaml | Security and reproducibility | `os.environ/VAR_NAME` references + `.env` file |
-| Claude Max subscription OAuth via LiteLLM | Violates Anthropic ToS since April 2026 | Anthropic API key (pay-per-token) |
 ## Reference Doc Claim Audit
 | Claim | Status | Finding |
 |-------|--------|---------|
@@ -101,7 +100,7 @@ A local, Dockerized **LiteLLM gateway** that lets Claude Code drive multiple mod
 | `ANTHROPIC_AUTH_TOKEN=your-litellm-key` | CONFIRMED | Verified; sent as `Authorization: Bearer` header to the gateway |
 | `ollama_chat/qwen3-coder:cloud` + `api_base: http://localhost:11434` | PARTIALLY REFUTED | Works but requires local Ollama daemon; direct cloud access via `openai/` + `https://ollama.com` avoids daemon |
 | "Ollama exposes Anthropic-compatible endpoints" | MISLEADING | Local Ollama exposes OpenAI-compat endpoints, NOT Anthropic-compat; LiteLLM is the Anthropic translation layer |
-| Claude Max routes through LiteLLM | REFUTED | Anthropic banned third-party OAuth use (enforced April 2026); API key required instead |
+| Claude Max routes through LiteLLM | CONFIRMED | Verified end-to-end (MAX-01/MAX-02; `/status` showed the Max subscription). LiteLLM forwards Claude Code's Max OAuth bearer via `forward_client_headers_to_llm_api`; routing your own subscription through your own local proxy is the documented first-party use case ([LiteLLM tutorial](https://docs.litellm.ai/docs/tutorials/claude_code_max_subscription)). The April-2026 ToS action targets third-party resale/identity-spoofing, not this. |
 ## Sources
 - [Claude Code environment variables (official)](https://code.claude.com/docs/en/env-vars) — `ANTHROPIC_BASE_URL`, `ANTHROPIC_AUTH_TOKEN`, `ANTHROPIC_API_KEY`, `CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY`
 - [Claude Code LLM gateway configuration (official)](https://code.claude.com/docs/en/llm-gateway) — full LiteLLM integration guide, auth methods, model discovery behavior
