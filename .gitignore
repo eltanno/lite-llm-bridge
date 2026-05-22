@@ -1,5 +1,12 @@
 # Secrets — never commit
 .env
 
+# TEMP spike (PROV-01, quick 260520-wih): ChatGPT OAuth token cache — never commit. Reverted after the test.
+.chatgpt-auth/
+
 # OS noise
 .DS_Store
+
+# Scratch + Windows junk
+tmp/
+*:Zone.Identifier
