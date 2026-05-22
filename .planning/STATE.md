@@ -4,8 +4,8 @@ milestone: v1.0
 milestone_name: milestone
 status: milestone_complete
 stopped_at: Milestone complete (Phase 01 was final phase)
-last_updated: 2026-05-20T21:45:03.959Z
-last_activity: 2026-05-20
+last_updated: 2026-05-22T13:45:00.000Z
+last_activity: 2026-05-22
 progress:
   total_phases: 1
   completed_phases: 1
@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-05-20)
 Phase: 01
 Plan: Not started
 Status: Milestone complete
-Last activity: 2026-05-20
+Last activity: 2026-05-22 - Completed quick task 260522-i4q
 
 Progress: [██████████] 100%
 
@@ -75,6 +75,12 @@ None yet.
 - Phase 1: Ollama Cloud exact `api_base` with LiteLLM `openai/` needs `curl` verification before committing config (`https://ollama.com/v1` is the documented value; confirm `/v1` doesn't double-prefix)
 - Phase 1: Tool-calling support on the chosen Ollama Cloud model — confirm during agentic spike; swap model if unsupported
 - Phase 1: `model_group_settings.forward_client_headers_to_llm_api` exact YAML syntax vs pinned LiteLLM version — verify against docs at plan time
+
+### Quick Tasks Completed
+
+| # | Description | Date | Commit | Directory |
+|---|-------------|------|--------|-----------|
+| 260522-i4q | Prove Claude Code uses both an Anthropic (Max) and an Ollama alias through the LiteLLM gateway | 2026-05-22 | 2d91da5 | [260522-i4q-prove-claude-code-uses-both-an-anthropic](./quick/260522-i4q-prove-claude-code-uses-both-an-anthropic/) |
 
 ## Deferred Items
 
