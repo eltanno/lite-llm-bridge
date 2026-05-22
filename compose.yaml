@@ -4,13 +4,11 @@
 services:
   litellm:
     image: ghcr.io/berriai/litellm:main-stable
-    # Pinned tag only. Never the moving 'latest' tag, and never the known-malware
-    # credential-stealing PyPI builds from late 2025 (see README / research).
     ports:
       - "4000:4000"
     volumes:
-      - ./config.yaml:/app/config.yaml:ro    # :ro = read-only inside the container
+      - ./config.yaml:/app/config.yaml:ro
     env_file:
-      - .env                                  # injects LITELLM_MASTER_KEY and OLLAMA_API_KEY
+      - .env
     command: ["--config", "/app/config.yaml", "--port", "4000"]
     restart: unless-stopped
