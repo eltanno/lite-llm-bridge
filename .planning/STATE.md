@@ -4,7 +4,7 @@ milestone: v1.0
 milestone_name: milestone
 status: milestone_complete
 stopped_at: Milestone complete (Phase 01 was final phase)
-last_updated: 2026-05-22T13:45:00.000Z
+last_updated: 2026-05-22T19:30:00.000Z
 last_activity: 2026-05-22
 progress:
   total_phases: 1
@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-05-20)
 Phase: 01
 Plan: Not started
 Status: Milestone complete
-Last activity: 2026-05-22 - Completed quick task 260522-i4q
+Last activity: 2026-05-22 - Completed quick task 260522-s9z
 
 Progress: [██████████] 100%
 
@@ -81,6 +81,7 @@ None yet.
 | # | Description | Date | Commit | Directory |
 |---|-------------|------|--------|-----------|
 | 260522-i4q | Prove Claude Code uses both an Anthropic (Max) and an Ollama alias through the LiteLLM gateway | 2026-05-22 | 2d91da5 | [260522-i4q-prove-claude-code-uses-both-an-anthropic](./quick/260522-i4q-prove-claude-code-uses-both-an-anthropic/) |
+| 260522-s9z | Expose real-name model catalog (3 Claude + 6 Ollama Cloud) with project-local launcher | 2026-05-22 | cd5ee21 | [260522-s9z-expose-real-name-model-catalog-3-claude-](./quick/260522-s9z-expose-real-name-model-catalog-3-claude-/) |
 
 ## Deferred Items
 
