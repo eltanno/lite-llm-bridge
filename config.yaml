@@ -1,55 +1,73 @@
-# config.yaml
-# Committed to repo — contains NO secrets.
-# Secrets live in .env (gitignored) and are referenced as os.environ/VAR_NAME.
+# config.yaml — LiteLLM model catalog (real-name design)
+# Committed to repo — contains NO secrets (.env holds them, referenced via os.environ/VAR_NAME).
 #
-# TEST MAPPING (quick 260522-i4q) — proving one gateway serves an Anthropic-Max alias
-# AND Ollama-Cloud aliases at the same time, both drivable from Claude Code:
-#   claude-opus               → DeepSeek V4 Pro  (Ollama Cloud)
-#   claude-sonnet             → Kimi K2.6        (Ollama Cloud)
-#   claude-haiku-4-5-20251001 → Claude Haiku 4.5 (Anthropic, Claude Max via OAuth-token forwarding)
+# DESIGN: models are exposed by their REAL provider IDs (a stable catalog). Which model backs
+# Claude Code's opus/sonnet/haiku TIERS is chosen on the CLIENT via ANTHROPIC_DEFAULT_*_MODEL
+# (see ./bin/claude-gw). Swapping a tier = change an env var (NO container restart). You only edit
+# this file to ADD or REMOVE a model from the catalog.
 #
-# Aliases are prefixed `claude-` so Claude Code's gateway model discovery picks them up
-# (only IDs beginning with `claude`/`anthropic` are added to the /model picker).
+# - Anthropic models use the real ID so Claude Code applies correct capabilities (Haiku = no
+#   thinking/effort; Opus/Sonnet = thinking). The Max OAuth bearer is forwarded ONLY to the
+#   Anthropic group (model_group_settings) — Ollama models authenticate with OLLAMA_API_KEY.
+# - Ollama models reach Ollama Cloud directly (openai/ + https://ollama.com/v1, no local daemon).
+#   drop_params strips Anthropic-only params Claude Code sends. Per-model thinking can be tuned with
+#   `reasoning_effort: none|low|medium|high` (default: the model's own behavior).
 
 model_list:
 
-  # claude-opus → DeepSeek V4 Pro (Ollama Cloud, OpenAI-compatible API — no local daemon)
-  - model_name: claude-opus
+  # ── Anthropic — Claude Max via OAuth-token forwarding (no api_key; bearer is forwarded) ──
+  - model_name: claude-opus-4-7
     litellm_params:
-      model: openai/deepseek-v4-pro
-      api_base: https://ollama.com/v1        # /v1 MUST be included — LiteLLM does not auto-append it
-      api_key: os.environ/OLLAMA_API_KEY
-
-  # claude-sonnet → Kimi K2.6 (Ollama Cloud)
-  - model_name: claude-sonnet
+      model: anthropic/claude-opus-4-7
+  - model_name: claude-sonnet-4-6
     litellm_params:
-      model: openai/kimi-k2.6
-      api_base: https://ollama.com/v1
-      api_key: os.environ/OLLAMA_API_KEY
-
-  # claude-haiku-4-5-20251001 → Claude Haiku 4.5 (Anthropic, Max subscription via OAuth forwarding)
-  # The alias is the REAL Haiku model ID on purpose, NOT a stable "claude-haiku": Claude Code decides
-  # whether to send thinking/effort by pattern-matching the model-ID STRING (not the tier slot). Haiku
-  # rejects those params, and an unrecognized alias name makes Claude Code send them anyway — verified
-  # 2026-05-22 (tier-pin via ANTHROPIC_DEFAULT_HAIKU_MODEL did NOT help; _SUPPORTED_CAPABILITIES does
-  # not apply over a gateway). So this one slot is version-pinned; opus/sonnet stay stable.
-  # No api_key here — the Max OAuth bearer is forwarded from Claude Code (see model_group_settings).
+      model: anthropic/claude-sonnet-4-6
   - model_name: claude-haiku-4-5-20251001
     litellm_params:
       model: anthropic/claude-haiku-4-5-20251001
 
+  # ── Ollama Cloud — OpenAI-compatible API, no local daemon (/v1 MUST be included) ──
+  - model_name: deepseek-v4-pro
+    litellm_params:
+      model: openai/deepseek-v4-pro
+      api_base: https://ollama.com/v1
+      api_key: os.environ/OLLAMA_API_KEY
+  - model_name: deepseek-v4-flash
+    litellm_params:
+      model: openai/deepseek-v4-flash
+      api_base: https://ollama.com/v1
+      api_key: os.environ/OLLAMA_API_KEY
+  - model_name: kimi-k2.6
+    litellm_params:
+      model: openai/kimi-k2.6
+      api_base: https://ollama.com/v1
+      api_key: os.environ/OLLAMA_API_KEY
+  - model_name: "qwen3.5:397b"
+    litellm_params:
+      model: "openai/qwen3.5:397b"
+      api_base: https://ollama.com/v1
+      api_key: os.environ/OLLAMA_API_KEY
+  - model_name: glm-5.1
+    litellm_params:
+      model: openai/glm-5.1
+      api_base: https://ollama.com/v1
+      api_key: os.environ/OLLAMA_API_KEY
+  - model_name: minimax-m2.7
+    litellm_params:
+      model: openai/minimax-m2.7
+      api_base: https://ollama.com/v1
+      api_key: os.environ/OLLAMA_API_KEY
+
 general_settings:
   master_key: os.environ/LITELLM_MASTER_KEY
 
-# Forward Claude Code's OAuth bearer ONLY to the Anthropic-backed group.
-# claude-opus/claude-sonnet (Ollama) are intentionally absent — they authenticate with
-# OLLAMA_API_KEY, never the forwarded Anthropic bearer.
-# E-01 fallback: if this per-group list is inactive on the pinned main-stable build, replace with
-#   general_settings: forward_client_headers_to_llm_api: true
-# (safe — no ANTHROPIC_API_KEY is in the container, so a stray bearer to Ollama is rejected, not leaked).
+# Forward Claude Code's Max OAuth bearer ONLY to the Anthropic models.
+# Ollama models must never receive the bearer (they use OLLAMA_API_KEY).
 model_group_settings:
   forward_client_headers_to_llm_api:
+    - claude-opus-4-7
+    - claude-sonnet-4-6
     - claude-haiku-4-5-20251001
 
 litellm_settings:
-  drop_params: true   # strip unknown/Anthropic-specific params before sending to OpenAI-compat (Ollama)
+  drop_params: true   # strip unknown/Anthropic-only params before sending to OpenAI-compat (Ollama)

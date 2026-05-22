@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+# claude-gw — launch Claude Code routed through the local LiteLLM gateway.
+#
+# Isolated by design: everything is set in THIS process only — no ~/.bashrc, no global config.
+# Usage:  ./bin/claude-gw [any claude args]
+#   e.g.  ./bin/claude-gw                          # interactive; tiers per the mapping below
+#         ./bin/claude-gw -p "hello"               # one-shot via the default (opus) tier
+#         ./bin/claude-gw --model glm-5.1 -p "hi"  # pick any catalog model directly
+#         ANTHROPIC_DEFAULT_OPUS_MODEL=glm-5.1 ./bin/claude-gw   # ad-hoc tier override
+#
+# Prereqs: gateway up (docker compose up -d) and logged into Claude Max (run `claude` once to /login).
+set -euo pipefail
+
+PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+# LITELLM_MASTER_KEY comes from the gitignored .env (never committed).
+if [ ! -f "$PROJECT_DIR/.env" ]; then
+  echo "claude-gw: $PROJECT_DIR/.env not found (needs LITELLM_MASTER_KEY)." >&2
+  exit 1
+fi
+set -a; . "$PROJECT_DIR/.env"; set +a
+
+# ── Tier mapping — which catalog model backs each Claude Code tier ───────────────────
+# Use any model_name from config.yaml. Swap freely; NO container restart needed.
+export ANTHROPIC_DEFAULT_OPUS_MODEL="${ANTHROPIC_DEFAULT_OPUS_MODEL:-deepseek-v4-pro}"
+export ANTHROPIC_DEFAULT_SONNET_MODEL="${ANTHROPIC_DEFAULT_SONNET_MODEL:-kimi-k2.6}"
+export ANTHROPIC_DEFAULT_HAIKU_MODEL="${ANTHROPIC_DEFAULT_HAIKU_MODEL:-claude-haiku-4-5-20251001}"
+
+# ── Gateway plumbing (leave as-is) ──────────────────────────────────────────────────
+export ANTHROPIC_BASE_URL="http://localhost:4000"
+export ANTHROPIC_CUSTOM_HEADERS="x-litellm-api-key: Bearer ${LITELLM_MASTER_KEY:?missing from .env}"
+export CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY=1
+# Must stay unset: the Max OAuth bearer needs the Authorization slot, and a set API key bypasses the gateway.
+unset ANTHROPIC_API_KEY ANTHROPIC_AUTH_TOKEN 2>/dev/null || true
+
+exec claude "$@"
