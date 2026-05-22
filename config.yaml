@@ -4,9 +4,9 @@
 #
 # TEST MAPPING (quick 260522-i4q) — proving one gateway serves an Anthropic-Max alias
 # AND Ollama-Cloud aliases at the same time, both drivable from Claude Code:
-#   claude-opus   → DeepSeek V4 Pro  (Ollama Cloud)
-#   claude-sonnet → Kimi K2.6        (Ollama Cloud)
-#   claude-haiku  → Claude Haiku 4.5 (Anthropic, Claude Max via OAuth-token forwarding)
+#   claude-opus               → DeepSeek V4 Pro  (Ollama Cloud)
+#   claude-sonnet             → Kimi K2.6        (Ollama Cloud)
+#   claude-haiku-4-5-20251001 → Claude Haiku 4.5 (Anthropic, Claude Max via OAuth-token forwarding)
 #
 # Aliases are prefixed `claude-` so Claude Code's gateway model discovery picks them up
 # (only IDs beginning with `claude`/`anthropic` are added to the /model picker).
@@ -27,9 +27,14 @@ model_list:
       api_base: https://ollama.com/v1
       api_key: os.environ/OLLAMA_API_KEY
 
-  # claude-haiku → Claude Haiku 4.5 (Anthropic, Max subscription via OAuth forwarding)
+  # claude-haiku-4-5-20251001 → Claude Haiku 4.5 (Anthropic, Max subscription via OAuth forwarding)
+  # The alias is the REAL Haiku model ID on purpose, NOT a stable "claude-haiku": Claude Code decides
+  # whether to send thinking/effort by pattern-matching the model-ID STRING (not the tier slot). Haiku
+  # rejects those params, and an unrecognized alias name makes Claude Code send them anyway — verified
+  # 2026-05-22 (tier-pin via ANTHROPIC_DEFAULT_HAIKU_MODEL did NOT help; _SUPPORTED_CAPABILITIES does
+  # not apply over a gateway). So this one slot is version-pinned; opus/sonnet stay stable.
   # No api_key here — the Max OAuth bearer is forwarded from Claude Code (see model_group_settings).
-  - model_name: claude-haiku
+  - model_name: claude-haiku-4-5-20251001
     litellm_params:
       model: anthropic/claude-haiku-4-5-20251001
 
@@ -44,7 +49,7 @@ general_settings:
 # (safe — no ANTHROPIC_API_KEY is in the container, so a stray bearer to Ollama is rejected, not leaked).
 model_group_settings:
   forward_client_headers_to_llm_api:
-    - claude-haiku
+    - claude-haiku-4-5-20251001
 
 litellm_settings:
   drop_params: true   # strip unknown/Anthropic-specific params before sending to OpenAI-compat (Ollama)
