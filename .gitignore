@@ -7,6 +7,10 @@
 # OS noise
 .DS_Store
 
+# GSD local state (not project documentation)
+.planning/STATE.md
+.planning/config.json
+
 # Scratch + Windows junk
 tmp/
 *:Zone.Identifier
