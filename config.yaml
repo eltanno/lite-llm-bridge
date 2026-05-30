@@ -81,3 +81,15 @@ model_group_settings:
 
 litellm_settings:
   drop_params: true   # strip unknown/Anthropic-only params before sending to OpenAI-compat (Ollama)
+  callbacks: ["websearch_interception"]
+  websearch_interception_params:
+    enabled_providers:
+      - anthropic  # /v1/messages handler — intercepts web_search from Claude Code before model call
+      - openai     # /chat/completions handler — all openai/* models (Ollama Cloud via OpenAI-compat)
+
+# WebSearch provider — Tavily free tier (1,000 searches/month)
+search_tools:
+  - search_tool_name: tavily-search
+    litellm_params:
+      search_provider: tavily
+      api_key: os.environ/TAVILY_API_KEY
